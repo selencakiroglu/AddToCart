@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AddToCart.Migrations
 {
     [DbContext(typeof(AddToCartContext))]
-    [Migration("20190504220136_AddToCartDBInitialMigration")]
-    partial class AddToCartDBInitialMigration
+    [Migration("20190505102754_InitialMigrationAddToCart")]
+    partial class InitialMigrationAddToCart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,26 @@ namespace AddToCart.Migrations
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("AddToCart.Entities.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("MovieId");
+
+                    b.Property<Guid?>("ProductId");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CartItems");
+                });
 
             modelBuilder.Entity("AddToCart.Entities.Category", b =>
                 {
@@ -63,6 +83,10 @@ namespace AddToCart.Migrations
 
                     b.Property<Guid>("DirectorId");
 
+                    b.Property<double>("Price");
+
+                    b.Property<int>("StockCount");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100);
@@ -85,6 +109,32 @@ namespace AddToCart.Migrations
                     b.HasAlternateKey("CategoryId", "MovieId");
 
                     b.ToTable("MovieCategories");
+                });
+
+            modelBuilder.Entity("AddToCart.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("AddToCart.Entities.CartItem", b =>
+                {
+                    b.HasOne("AddToCart.Entities.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("AddToCart.Entities.User", "User")
+                        .WithMany("CartItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AddToCart.Entities.Movie", b =>

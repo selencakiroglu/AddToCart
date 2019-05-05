@@ -14,6 +14,8 @@ namespace AddToCart.Entities
         public DbSet<Category> Categories { get; set; }
         public DbSet<MovieCategory> MovieCategories { get; set; }
         public DbSet<Director> Directors { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

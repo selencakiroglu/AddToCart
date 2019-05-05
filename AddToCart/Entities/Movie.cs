@@ -18,6 +18,12 @@ namespace AddToCart.Entities
         public string Description { get; set; }
 
         [Required]
+        public double Price { get; set; }
+
+        [Required]
+        public int StockCount { get; set; }
+
+        [Required]
         public ICollection<MovieCategory> MovieCategories { get; set; }
             = new List<MovieCategory>();
         

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AddToCart.Migrations
 {
-    public partial class AddToCartDBInitialMigration : Migration
+    public partial class InitialMigrationAddToCart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,12 +33,26 @@ namespace AddToCart.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Movies",
                 columns: table => new
                 {
                     MovieId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
+                    Price = table.Column<double>(nullable: false),
+                    StockCount = table.Column<int>(nullable: false),
                     DirectorId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -48,6 +62,32 @@ namespace AddToCart.Migrations
                         name: "FK_Movies_Directors_DirectorId",
                         column: x => x.DirectorId,
                         principalTable: "Directors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ProductId = table.Column<Guid>(nullable: true),
+                    MovieId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Movies_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -78,6 +118,16 @@ namespace AddToCart.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartItems_ProductId",
+                table: "CartItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_UserId",
+                table: "CartItems",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Movies_DirectorId",
                 table: "Movies",
                 column: "DirectorId");
@@ -86,7 +136,13 @@ namespace AddToCart.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
                 name: "MovieCategories");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");
