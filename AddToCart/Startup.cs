@@ -17,7 +17,7 @@ namespace AddToCart
         {
             services.AddMvc();
 
-            var connectionString = @"Server=(localdb)\ProjectsV13;Database=AddToCartDB;Trusted_Connection=True;";
+            var connectionString = @"Server=(localdb)\mssqllocaldb;Database=AddToCartDB;Trusted_Connection=True;";
             services.AddDbContext<AddToCartContext>(o => o.UseSqlServer(connectionString));
         }
 
