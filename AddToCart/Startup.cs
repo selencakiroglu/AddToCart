@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AddToCart.Entities;
+﻿using AddToCart.Entities;
+using AddToCart.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +16,7 @@ namespace AddToCart
 
             var connectionString = @"Server=(localdb)\mssqllocaldb;Database=AddToCartDB;Trusted_Connection=True;";
             services.AddDbContext<AddToCartContext>(o => o.UseSqlServer(connectionString));
+            services.AddScoped<IAddToCartRepository, AddToCartRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -39,6 +37,9 @@ namespace AddToCart
                     });
                 });
             }
+
+            addToCartContext.EnsureSeedDataForContext();
+            addToCartContext.EnsureSeedDataForUserContext();
 
             app.UseMvc();
         }
