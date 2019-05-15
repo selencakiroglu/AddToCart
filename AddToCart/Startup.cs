@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Recipes.API.Helpers;
+using System.Collections.Generic;
 
 namespace AddToCart
 {
@@ -41,7 +43,13 @@ namespace AddToCart
             addToCartContext.EnsureSeedDataForContext();
             addToCartContext.EnsureSeedDataForUserContext();
 
-            app.UseMvc();
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<IEnumerable<Entities.Category>, Models.CategoryListDto>()
+                    .ConvertUsing<CategoryListConverter>();
+            });
+
+                app.UseMvc();
         }
     }
 }

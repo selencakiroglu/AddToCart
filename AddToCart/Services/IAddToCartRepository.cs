@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AddToCart.Services
 {
-    interface IAddToCartRepository
+    public interface IAddToCartRepository
     {
         User GetUser(Guid Id);
         Movie GetMovie(Guid MovieId);
